@@ -4,8 +4,6 @@ import traceback
 import praw.exceptions
 import prawcore
 
-import util
-
 
 class InboxScanner:
 
@@ -18,82 +16,6 @@ class InboxScanner:
         self.log = log
 
         self.tipper = tipper
-
-    def transfer_funds(self, amount, item, send_address):
-        try:
-            user_data = util.find_user(item.author.name, self.log, self.db)
-            user_address = user_data['xrb_address']
-            data = {'action': 'account_balance', 'account': user_address}
-            parsed_json = self.rest_wallet.post_to_wallet(data, self.log)
-            data = {'action': 'rai_from_raw', 'amount': int(parsed_json['balance'])}
-            rai_balance = self.rest_wallet.post_to_wallet(data, self.log)
-
-            rai_send = float(amount) * 1000000  # float of total send
-            raw_send = str(int(rai_send)) + '000000000000000000000000'
-            # check amount left
-            if int(rai_send) <= int(rai_balance['amount']):
-                data = {'action': 'send', 'wallet': self.wallet_id, 'source': user_address, 'destination': send_address,
-                        'amount': int(raw_send)}
-                parsed_json = self.rest_wallet.post_to_wallet(data, self.log)
-                reply_message = 'Sent %s to %s\n\n[Block Link](https://raiblocks.net/block/index.php?h=%s)' % (
-                    amount, send_address, str(parsed_json['block']))
-                item.reply(reply_message)
-            else:
-                reply_message = 'Not enough in your account to transfer\n\n'
-                item.reply(reply_message)
-        except:
-            reply_message = 'Invalid amount : %s' % amount
-            item.reply(reply_message)
-            self.log.error("Unexpected error: " + str(sys.exc_info()[0]))
-            tb = traceback.format_exc()
-            self.log.error(tb)
-
-    def prepare_send(self, commands, item):
-        amount = commands[1]
-        send_address = commands[2]
-        data = {"action": "validate_account_number", "account": send_address}
-        check_address = self.rest_wallet.post_to_wallet(data, self.log)
-        if len(send_address) != 64 or send_address[:4] != "xrb_" or check_address['valid'] != '1':
-            self.log.info('Invalid destination address')
-            reply_message = 'Invalid destination address : %s' % send_address
-            item.reply(reply_message)
-        else:
-            self.transfer_funds(amount, item, send_address)
-
-    def get_balance(self, item):
-        user_data = util.find_user(item.author.name, self.log, self.db)
-        user_address = user_data['xrb_address']
-        data = {'action': 'account_balance', 'account': user_address}
-        parsed_json = self.rest_wallet.post_to_wallet(data, self.log)
-
-        data = {'action': 'rai_from_raw', 'amount': int(parsed_json['balance'])}
-        rai_balance = self.rest_wallet.post_to_wallet(data, self.log)
-        self.log.info(rai_balance['amount'])
-        xrb_balance = format((float(rai_balance['amount']) / 1000000.0), '.6f')
-        rate = util.get_price()
-        if rate is not None:
-            usd = float(xrb_balance) * rate
-            reply_message = 'Your balance is :\n\n %s XRB or $%s USD \n\nUSD conversion rate of $%s' % \
-                            (xrb_balance, str(format(float(usd), '.3f')), str(format(float(rate), '.3f')))
-        else:
-            reply_message = 'Your balance is :\n\n %s XRB' % xrb_balance
-        item.reply(reply_message)
-
-    def register_account(self, item, user_table):
-        # Generate address
-        data = {'action': 'account_create', 'wallet': self.wallet_id}
-        parsed_json = self.rest_wallet.post_to_wallet(data, self.log)
-        self.log.info(parsed_json['account'])
-        # Add to database
-        record = dict(user_id=item.author.name, xrb_address=parsed_json['account'])
-        self.log.info("Inserting into db: " + str(record))
-        user_table.insert(record)
-        # Reply
-        explorer_link = 'https://raiblocks.net/account/index.php?acc=' + parsed_json['account']
-        reply_message = 'Thanks for registering, your deposit address is ' + parsed_json['account'] + \
-                        ' and you can see your balance here ' + explorer_link + '\r\nFor more details reply with "help"'
-
-        item.reply(reply_message)
 
     def process_mention(self, item):
         comment = None
@@ -141,6 +63,11 @@ class InboxScanner:
                 self.log.info("Comment subject: " + str(item.subject))
                 if item.subject == 'username mention':
                     self.process_mention(item)
+            else:
+                reply_message = 'Please do not send PMs to this bot. The main TipBot, /u/RaiBlocks_TipBot,' + \
+                                ' should be used for interaction via PM \n\nGo to the [wiki]' + \
+                                '(https://www.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info'
+                item.reply(reply_message)
 
             # Add message to database
             record = dict(user_id=item.author.name, message_id=item.name)
