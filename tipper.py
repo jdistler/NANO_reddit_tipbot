@@ -78,12 +78,12 @@ class Tipper:
                     reply_text = reply_text + "  \n\nThe GiveAway balance is %s, so I can gift %s more redditors!" % (
                         str(giveaway_xrb), str(int(redditors_left)))
                     reply_text = reply_text + "  \n\nGo to the [GiveAway Wiki]" + \
-                                 "(https://www.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info"
+                                 "(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info"
                 else:
                     reply_text = reply_text + 'The GiveAway bot is all out of gifts! Consider tipping this bot ' \
                                               'to replenish its gifts'
                     reply_text = reply_text + "  \n\nGo to the [GiveAway Wiki]" + \
-                                 "(https://www.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info"
+                                 "(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info"
 
                 self.comment_reply(comment, reply_text)
         except TypeError as e:
@@ -125,7 +125,7 @@ class Tipper:
                 reply_message = "The user /u/" + receiving_user + " cannot be gifted because they are already" + \
                                 " registered with the TipBot\n\n Pass the gift to all newcomers to RaiBlocks!" + \
                                 "\n\n For more info on the giveaway, check out the" + \
-                                " [GiveAway Wiki](https://www.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway)"
+                                " [GiveAway Wiki](https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway)"
 
                 self.comment_reply(comment, reply_message)
             else:
@@ -163,14 +163,14 @@ class Tipper:
                         reply_text = 'The GiveAway bot is all out of gifts! Consider tipping this bot ' \
                                      'to replenish its gifts'
                         reply_text = reply_text + "  \n\nGo to the [GiveAway Wiki]" + \
-                                     "(https://www.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info"
+                                     "(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info"
                         self.comment_reply(comment, reply_text)
 
         else:
             self.log.info('Sender NOT in db')
             reply_text = 'Hi /u/' + str(comment.author.name) + ', please register with the bot by sending it a' \
                          + ' private message.  \n\nGo to the [wiki]' + \
-                         "(https://www.reddit.com/r/RaiBlocks_tipbot/wiki/index) for more info"
+                         "(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/index) for more info"
 
             self.comment_reply(comment, reply_text)
 
@@ -222,7 +222,7 @@ class Tipper:
         if comment.author.name != 'RaiBlocks_tipbot':
             if mention:
                 self.comment_reply(comment, 'Was I mentioned? I could not parse your request  \n\nGo to the [wiki]' +
-                                   '(https://www.reddit.com/r/RaiBlocks_tipbot/wiki/index) to learn how to tip with' +
+                                   '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/index) to learn how to tip with' +
                                    ' RaiBlocks')
             else:
                 self.comment_reply(comment,
@@ -230,7 +230,7 @@ class Tipper:
                                    '`!tipxrb <username> <amount>`  \n\n`\u\RaiBlocks_TipBot <username> <amount>`  \n\n'
                                    + '`\u\XRB4U <username> <amount>`  \n\n  Amount must be greater than 0'
                                    + ' and less than 5  \n\nGo to the [wiki]' +
-                                   '(https://www.reddit.com/r/RaiBlocks_tipbot/wiki/index) for more commands')
+                                   '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/index) for more commands')
         record = dict(
             comment_id=comment.fullname, to=None, amount=None, author=comment.author.name)
         self.log.info("Inserting into db: " + str(record))
@@ -275,7 +275,7 @@ class Tipper:
             self.process_command(comment, receiving_user, amount)
         else:
             self.comment_reply(comment, 'Was I mentioned? I could not parse your request  \n\nGo to the [wiki]' +
-                               '(https://www.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) to learn about '
+                               '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) to learn about '
                                'the GiveAway program')
 
     def parse_tip(self, comment):

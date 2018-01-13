@@ -66,7 +66,7 @@ class InboxScanner:
             else:
                 reply_message = 'Please do not send PMs to this bot. The main TipBot, /u/RaiBlocks_TipBot,' + \
                                 ' should be used for interaction via PM \n\nGo to the [wiki]' + \
-                                '(https://www.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info'
+                                '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info'
                 item.reply(reply_message)
 
             # Add message to database
