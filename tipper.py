@@ -73,7 +73,7 @@ class Tipper:
                             'destination': receiving_address, 'amount': int(raw_send)}
                     post_body = self.rest_wallet.post_to_wallet(data, self.log)
                     reply_text = reply_text + \
-                                 'Tipped %s XRB or $%s to /u/%s\n\nUSD conversion rate of $%s per XRB from [Coin Market Cap](https://coinmarketcap.com/currencies/raiblocks/)\n\n[Block Link](https://raiblocks.net/block/index.php?h=%s)' \
+                                 'Tipped %s XRB or $%s to /u/%s\n\nUSD conversion rate of $%s per XRB from [Coin Market Cap](https://coinmarketcap.com/currencies/raiblocks/)\n\n[Block Link](https://www.raiblocks.club/block/%s)' \
                                  % (formatted_amount, formatted_usd, receiving_user, formatted_rate,
                                     str(post_body['block']))
                     reply_text = reply_text + "  \n\nGo to the [wiki]" + \
