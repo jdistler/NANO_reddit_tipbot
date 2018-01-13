@@ -149,7 +149,7 @@ class InboxScanner:
                         reply_message = 'Help\n\n Reply with the command in the body of text:\n\n  balance - get' \
                                         + ' your balance\n\n  send <amount> <address> - send XRB to an external ' \
                                           'address\n\naddress - get your deposit address\n\nMore info: ' \
-                                        + 'https://www.reddit.com/r/RaiBlocks_tipbot/wiki/start'
+                                        + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
                         item.reply(reply_message)
 
                     elif 'address' in item.body.lower():
@@ -169,13 +169,13 @@ class InboxScanner:
                             reply_message = 'Sorry I could not parse your request.\n\nWhen making requests only put' + \
                                             ' one command in the message body with no other text\n\nTry the "help"' + \
                                             ' command\n\nMore info: ' \
-                                            + 'https://www.reddit.com/r/RaiBlocks_tipbot/wiki/start'
+                                            + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
                             item.reply(reply_message)
 
                     elif 'register' in item.body.lower():
                         self.log.info("Already Registered")
                         reply_message = 'Your account is already registered\n\nTry the "help" command\n\nMore info: ' \
-                                        + 'https://www.reddit.com/r/RaiBlocks_tipbot/wiki/start'
+                                        + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
                         item.reply(reply_message)
 
                     else:
@@ -183,7 +183,7 @@ class InboxScanner:
                         reply_message = 'Sorry I could not parse your request.\n\nWhen making requests only put' + \
                                         ' one command in the message body with no other text\n\nTry the "help"' + \
                                         ' command\n\nMore info: ' \
-                                        + 'https://www.reddit.com/r/RaiBlocks_tipbot/wiki/start'
+                                        + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
                         item.reply(reply_message)
                 else:
                     self.log.info(str(item.author.name) + ' Not in DB')

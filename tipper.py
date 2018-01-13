@@ -77,7 +77,7 @@ class Tipper:
                                  % (formatted_amount, formatted_usd, receiving_user, formatted_rate,
                                     str(post_body['block']))
                     reply_text = reply_text + "  \n\nGo to the [wiki]" + \
-                                 "(https://www.reddit.com/r/RaiBlocks_tipbot/wiki/start) for more info"
+                                 "(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start) for more info"
                 else:
                     reply_text = reply_text + 'Not enough in your account to tip'
 
@@ -140,7 +140,7 @@ class Tipper:
             self.log.info('Sender NOT in db')
             reply_text = 'Hi /u/' + str(comment.author.name) + ', please register with the bot by sending it a' \
                          + ' private message with the text "register" in the body of the message.  \n\nGo to the [wiki]' + \
-                         "(https://www.reddit.com/r/RaiBlocks_tipbot/wiki/start) for more info"
+                         "(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start) for more info"
 
             self.comment_reply(comment, reply_text)
 
@@ -190,14 +190,14 @@ class Tipper:
         if comment.author.name != 'RaiBlocks_tipbot':
             if mention:
                 self.comment_reply(comment, 'Was I mentioned? I could not parse your request  \n\nGo to the [wiki]' +
-                                   '(https://www.reddit.com/r/RaiBlocks_tipbot/wiki/start) to learn how to tip with' +
+                                   '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start) to learn how to tip with' +
                                    ' RaiBlocks')
             else:
                 self.comment_reply(comment,
                                    'Tip command is invalid. Tip with any of the following formats:  \n\n' +
                                    '`!tipxrb <username> <amount>`  \n\n`/u/RaiBlocks_TipBot <username> <amount>`  \n\n'
                                    + '`/u/XRB4U <username> <amount>`  \n\nGo to the [wiki]' +
-                                   '(https://www.reddit.com/r/RaiBlocks_tipbot/wiki/start) for more commands')
+                                   '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start) for more commands')
         record = dict(
             comment_id=comment.fullname, to=None, amount=None, author=comment.author.name)
         self.log.info("Inserting into db: " + str(record))
