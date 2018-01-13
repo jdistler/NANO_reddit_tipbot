@@ -35,7 +35,7 @@ class InboxScanner:
                 data = {'action': 'send', 'wallet': self.wallet_id, 'source': user_address, 'destination': send_address,
                         'amount': int(raw_send)}
                 parsed_json = self.rest_wallet.post_to_wallet(data, self.log)
-                reply_message = 'Sent %s to %s\n\n[Block Link](https://raiblocks.net/block/index.php?h=%s)' % (
+                reply_message = 'Sent %s to %s\n\n[Block Link](https://www.raiblocks.club/block/%s)' % (
                     amount, send_address, str(parsed_json['block']))
                 item.reply(reply_message)
             else:
@@ -89,7 +89,7 @@ class InboxScanner:
         self.log.info("Inserting into db: " + str(record))
         user_table.insert(record)
         # Reply
-        explorer_link = 'https://raiblocks.net/account/index.php?acc=' + parsed_json['account']
+        explorer_link = 'https://www.raiblocks.club/account/' + parsed_json['account']
         reply_message = 'Thanks for registering, your deposit address is ' + parsed_json['account'] + \
                         ' and you can see your balance here ' + explorer_link + '\r\nFor more details reply with "help"'
 
