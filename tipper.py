@@ -254,35 +254,45 @@ class Tipper:
         if comment_table.find_one(comment_id=comment.fullname):
             self.log.info('Already in db, ignore')
         else:
-            length = len(parts_of_comment)
-            passing = False
+            author = comment.author.name.lower()
+            if author != "reddit" and author != "xrb4u" and author != "raiblocks_tipbot" and author != "giftxrb" \
+                    and author != "automoderator":
+                length = len(parts_of_comment)
+                passing = False
 
-            # check that index+2 exists in array
-            if command_index + 2 < length:
-                # check for both tip formats
-                # !tipxrb <user> <amount>
-                # !tipxrb <amount>
-                receiving_user = parts_of_comment[command_index + 1]
-                amount = parts_of_comment[command_index + 2]
-                if self.validate_double_parameter_tip(parts_of_comment, command_index):
-                    self.process_command(comment, receiving_user, amount)
-                    passing = True
-                elif self.validate_single_parameter_tip(parts_of_comment, command_index):
-                    amount = parts_of_comment[command_index + 1]
-                    self.process_single_parameter_tip(comment, amount)
-                    passing = True
+                # check that index+2 exists in array
+                if command_index + 2 < length:
+                    # check for both tip formats
+                    # !tipxrb <user> <amount>
+                    # !tipxrb <amount>
+                    receiving_user = parts_of_comment[command_index + 1]
+                    amount = parts_of_comment[command_index + 2]
+                    if self.validate_double_parameter_tip(parts_of_comment, command_index):
+                        self.process_command(comment, receiving_user, amount)
+                        passing = True
+                    elif self.validate_single_parameter_tip(parts_of_comment, command_index):
+                        amount = parts_of_comment[command_index + 1]
+                        self.process_single_parameter_tip(comment, amount)
+                        passing = True
 
-            elif command_index + 1 < length:
-                # check for one tip format
-                # !tipxrb <amount>
-                if self.validate_single_parameter_tip(parts_of_comment, command_index):
-                    amount = parts_of_comment[command_index + 1]
-                    self.process_single_parameter_tip(comment, amount)
-                    passing = True
+                elif command_index + 1 < length:
+                    # check for one tip format
+                    # !tipxrb <amount>
+                    if self.validate_single_parameter_tip(parts_of_comment, command_index):
+                        amount = parts_of_comment[command_index + 1]
+                        self.process_single_parameter_tip(comment, amount)
+                        passing = True
 
-            if not passing:
-                # invalid command
-                self.invalid_formatting(comment, mention)
+                if not passing:
+                    # invalid command
+                    self.invalid_formatting(comment, mention)
+            else:
+                # Add to db
+                record = dict(
+                    comment_id=comment.fullname, to=None, amount=None, author=comment.author.name)
+                self.log.info("Inserting into db: " + str(record))
+                comment_table.insert(record)
+                self.log.info('DB updated')
 
     def parse_comment(self, comment, commands, mention):
         comment_split_newlines = comment.body.lower().splitlines()
