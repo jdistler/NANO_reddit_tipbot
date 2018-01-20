@@ -65,7 +65,7 @@ class Tipper:
                 if int(rai_send) <= int(rai_balance['amount']):
                     self.log.info('Gifting now')
                     giveaway_xrb = float(rai_balance['amount']) / 1000000.0
-                    redditors_left = giveaway_xrb / 0.0001
+                    redditors_left = giveaway_xrb / float(amount)
 
                     data = {'action': 'send', 'wallet': self.wallet_id, 'source': sender_user_address,
                             'destination': receiving_address, 'amount': int(raw_send)}
@@ -286,7 +286,7 @@ class Tipper:
         if comment_table.find_one(comment_id=comment.fullname):
             self.log.info('Already in db, ignore')
         else:
-            amount = "0.0001"
+            amount = "$0.01"
             self.process_single_parameter_tip(comment, amount)
 
     def parse_comment(self, comment, commands, mention):
