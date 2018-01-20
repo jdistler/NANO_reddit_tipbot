@@ -1,5 +1,6 @@
 import sys
 import traceback
+from datetime import datetime
 
 import praw.exceptions
 import prawcore
@@ -51,23 +52,42 @@ class InboxScanner:
         if message_table.find_one(message_id=item.name):
             self.log.info('Already in db, ignore')
         else:
+            author = item.author.name.lower()
+            if author != "reddit" and author != "xrb4u" and author != "raiblocks_tipbot" and author != "giftxrb" \
+                    and author != "automoderator":
 
-            self.log.info("Item is as follows:")
-            self.log.info((vars(item)))
+                redditor = self.reddit_client.redditor(item.author.name)
 
-            self.log.info("Attribute - Item was comment: " + str(item.was_comment))
+                created = redditor.created_utc
 
-            # Only care about mentions for the giveaway bot
+                age = (datetime.utcnow() - datetime.fromtimestamp(int(created))).days
 
-            if item.was_comment:
-                self.log.info("Comment subject: " + str(item.subject))
-                if item.subject == 'username mention':
-                    self.process_mention(item)
-            else:
-                reply_message = 'Please do not send PMs to this bot. The main TipBot, /u/RaiBlocks_TipBot,' + \
-                                ' should be used for interaction via PM \n\nGo to the [wiki]' + \
-                                '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info'
-                item.reply(reply_message)
+                comment_karma = redditor.comment_karma
+
+                if age >= 10 and comment_karma >= 20:
+
+                    self.log.info("Item is as follows:")
+                    self.log.info((vars(item)))
+
+                    self.log.info("Attribute - Item was comment: " + str(item.was_comment))
+
+                    # Only care about mentions for the giveaway bot
+
+                    if item.was_comment:
+                        self.log.info("Comment subject: " + str(item.subject))
+                        if item.subject == 'username mention':
+                            self.process_mention(item)
+                    else:
+                        reply_message = 'Please do not send PMs to this bot. The main TipBot, /u/RaiBlocks_TipBot,' + \
+                                        ' should be used for interaction via PM \n\nGo to the [wiki]' + \
+                                        '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info'
+                        item.reply(reply_message)
+                else:
+                    reply_message = 'Sorry! I cannot gift an account less than 10 days old or with less than' \
+                                    ' 20 comment karma\n\n This is to prevent bots from exploiting the RaiBlocks ' \
+                                    'giveaway \n\nGo to the [wiki]' + \
+                                    '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info'
+                    item.reply(reply_message)
 
             # Add message to database
             record = dict(user_id=item.author.name, message_id=item.name)

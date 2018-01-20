@@ -28,11 +28,8 @@ class Tipper:
         return False
 
     def send_tip(self, comment, amount, sender_user_address, receiving_address, receiving_user, prior_reply_text,
-                 rai_balance):
+                 rai_balance, rate):
         try:
-            rate = util.get_price()
-            if rate is None:
-                raise ValueError('Could not retrieve rate')
 
             formatted_rate = str(format(float(rate), '.3f'))
             formatted_amount = amount
@@ -138,7 +135,13 @@ class Tipper:
                 data = {'action': 'rai_from_raw', 'amount': int(
                     post_body['balance'])}
                 rai_balance = self.rest_wallet.post_to_wallet(data, self.log)
-                float_amount = float(amount)
+
+                rate = util.get_price()
+                if rate is None:
+                    raise ValueError('Could not retrieve rate')
+                xrb = float(amount[1:]) / rate
+
+                float_amount = float(xrb)
                 if float_amount > 0:
                     rai_send = float_amount * 1000000
 
@@ -158,7 +161,7 @@ class Tipper:
                         receiving_address = post_body['account']
 
                         self.send_tip(comment, amount, sender_user_address, receiving_address, receiving_user,
-                                      reply_text, rai_balance)
+                                      reply_text, rai_balance, rate)
                     else:
                         reply_text = 'The GiveAway bot is all out of gifts! Consider tipping this bot ' \
                                      'to replenish its gifts'
