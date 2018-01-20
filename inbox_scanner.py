@@ -98,7 +98,11 @@ class InboxScanner:
                 self.log.error(tb)
 
             # Add message to database
-            record = dict(user_id=item.author.name, message_id=item.name)
+            try:
+                record = dict(user_id=item.author.name, message_id=item.name)
+            except:
+                record = dict(user_id=None, message_id=item.name)
+
             self.log.info("Inserting into db: " + str(record))
             message_table.insert(record)
 
