@@ -54,8 +54,10 @@ class InboxScanner:
         else:
             try:
                 author = item.author.name.lower()
+                subreddit_name = item.subreddit.display_name
+                self.log.info("Author: " + author + "\nSubreddit: " + subreddit_name)
                 if author != "reddit" and author != "xrb4u" and author != "raiblocks_tipbot" and author != "giftxrb" \
-                        and author != "automoderator":
+                        and author != "automoderator" and subreddit_name.lower() != "cryptocurrency":
 
                     redditor = self.reddit_client.redditor(item.author.name)
 
@@ -92,7 +94,10 @@ class InboxScanner:
             except:
                 reply_message = 'An error came up, your request could not be processed\n\n' + \
                                 ' Paging /u/valentulus_menskr error id: ' + item.name + '\n\n'
-                item.reply(reply_message)
+                try:
+                    item.reply(reply_message)
+                except:
+                    self.log.error("Unexpected error: " + str(sys.exc_info()[0]))
                 self.log.error("Unexpected error: " + str(sys.exc_info()[0]))
                 tb = traceback.format_exc()
                 self.log.error(tb)
