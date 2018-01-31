@@ -129,79 +129,93 @@ class InboxScanner:
         if message_table.find_one(message_id=item.name):
             self.log.info('Already in db, ignore')
         else:
-            author = item.author.name.lower()
-            if author != "reddit" and author != "xrb4u" and author != "raiblocks_tipbot" and author != "giftxrb" \
-                    and author != "automoderator":
-                user_table = self.db['user']
+            author_obj = item.author
+            if author_obj is not None:
+                author_name = author_obj.name
+                if author_name is not None:
+                    author = author_name.lower()
+                    if author != "reddit" and author != "xrb4u" and author != "raiblocks_tipbot" and author != "giftxrb" \
+                            and author != "automoderator":
+                        user_table = self.db['user']
 
-                self.log.info("Item is as follows:")
-                self.log.info((vars(item)))
+                        self.log.info("Item is as follows:")
+                        self.log.info((vars(item)))
 
-                self.log.info("Attribute - Item was comment: " + str(item.was_comment))
-                if item.was_comment:
-                    self.log.info("Comment subject: " + str(item.subject))
-                    if item.subject == 'username mention':
-                        self.process_mention(item)
-                else:
-                    user_data = util.find_user(item.author.name, self.log, self.db)
-                    if user_data is not None:
-                        self.log.info('Found Author ' + str(item.author.name))
-                        commands = item.body.split(" ")
-                        self.log.info(item.body)
-                        if 'help' in item.body.lower():
-                            reply_message = 'Help\n\n Reply with the command in the body of text:\n\n  balance - get' \
-                                            + ' your balance\n\n  send <amount> <address> - send XRB to an external ' \
-                                              'address\n\naddress - get your deposit address\n\nMore info: ' \
-                                            + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
-                            item.reply(reply_message)
+                        self.log.info("Attribute - Item was comment: " + str(item.was_comment))
+                        if item.was_comment:
+                            self.log.info("Comment subject: " + str(item.subject))
+                            if item.subject == 'username mention':
+                                self.process_mention(item)
+                        else:
+                            user_data = util.find_user(item.author.name, self.log, self.db)
+                            if user_data is not None:
+                                self.log.info('Found Author ' + str(item.author.name))
+                                commands = item.body.split(" ")
+                                self.log.info(item.body)
+                                if 'help' in item.body.lower():
+                                    reply_message = 'Help\n\n Reply with the command in the body of text:\n\n  balance - get' \
+                                                    + ' your balance\n\n  send <amount> <address> - send XRB to an external ' \
+                                                      'address\n\naddress - get your deposit address\n\nMore info: ' \
+                                                    + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
+                                    item.reply(reply_message)
 
-                        elif 'address' in item.body.lower():
-                            self.log.info(user_data['xrb_address'])
-                            reply_message = 'Your deposit address is :\n\n%s' % user_data['xrb_address']
-                            item.reply(reply_message)
+                                elif 'address' in item.body.lower():
+                                    self.log.info(user_data['xrb_address'])
+                                    reply_message = 'Your deposit address is :\n\n%s' % user_data['xrb_address']
+                                    item.reply(reply_message)
 
-                        elif 'balance' in item.body.lower():
-                            self.log.info('Getting balance')
-                            self.get_balance(item)
+                                elif 'balance' in item.body.lower():
+                                    self.log.info('Getting balance')
+                                    self.get_balance(item)
 
-                        elif 'send' in item.body.lower():
-                            self.log.info('Sending raiblocks')
-                            if len(commands) > 2:
-                                self.prepare_send(commands, item)
+                                elif 'send' in item.body.lower():
+                                    self.log.info('Sending raiblocks')
+                                    if len(commands) > 2:
+                                        self.prepare_send(commands, item)
+                                    else:
+                                        reply_message = 'Sorry I could not parse your request.\n\nWhen making requests only put' + \
+                                                        ' one command in the message body with no other text\n\nTry the "help"' + \
+                                                        ' command\n\nMore info: ' \
+                                                        + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
+                                        item.reply(reply_message)
+
+                                elif 'register' in item.body.lower():
+                                    self.log.info("Already Registered")
+                                    reply_message = 'Your account is already registered\n\nTry the "help" command\n\nMore info: ' \
+                                                    + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
+                                    item.reply(reply_message)
+
+                                else:
+                                    self.log.info("Bad message")
+                                    reply_message = 'Sorry I could not parse your request.\n\nWhen making requests only put' + \
+                                                    ' one command in the message body with no other text\n\nTry the "help"' + \
+                                                    ' command\n\nMore info: ' \
+                                                    + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
+                                    item.reply(reply_message)
                             else:
-                                reply_message = 'Sorry I could not parse your request.\n\nWhen making requests only put' + \
-                                                ' one command in the message body with no other text\n\nTry the "help"' + \
-                                                ' command\n\nMore info: ' \
-                                                + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
-                                item.reply(reply_message)
+                                self.log.info(str(item.author.name) + ' Not in DB')
+                                if 'register' in item.body.lower():
+                                    self.log.info('Registering account')
+                                    self.register_account(item, user_table)
 
-                        elif 'register' in item.body.lower():
-                            self.log.info("Already Registered")
-                            reply_message = 'Your account is already registered\n\nTry the "help" command\n\nMore info: ' \
-                                            + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
-                            item.reply(reply_message)
+                                else:
+                                    self.log.info("Could not parse message")
+                                    reply_message = 'Your account is not registered and I could not parse your command\n\n' + \
+                                                    ' Reply with "register" in the body of a private message to begin\n\n'
+                                    item.reply(reply_message)
+            passing = False
+            author_obj = item.author
+            if author_obj is not None:
+                author_name = author_obj.name
+                if author_name is not None:
+                    passing = True
 
-                        else:
-                            self.log.info("Bad message")
-                            reply_message = 'Sorry I could not parse your request.\n\nWhen making requests only put' + \
-                                            ' one command in the message body with no other text\n\nTry the "help"' + \
-                                            ' command\n\nMore info: ' \
-                                            + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
-                            item.reply(reply_message)
-                    else:
-                        self.log.info(str(item.author.name) + ' Not in DB')
-                        if 'register' in item.body.lower():
-                            self.log.info('Registering account')
-                            self.register_account(item, user_table)
-
-                        else:
-                            self.log.info("Could not parse message")
-                            reply_message = 'Your account is not registered and I could not parse your command\n\n' + \
-                                            ' Reply with "register" in the body of a private message to begin\n\n'
-                            item.reply(reply_message)
+            if passing:
+                record = dict(user_id=item.author.name, message_id=item.name)
+            else:
+                record = dict(user_id=None, message_id=item.name)
 
             # Add message to database
-            record = dict(user_id=item.author.name, message_id=item.name)
             self.log.info("Inserting into db: " + str(record))
             message_table.insert(record)
 
