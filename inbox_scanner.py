@@ -20,7 +20,7 @@ class InboxScanner:
 
     def process_mention(self, item):
         comment = None
-        command = ["/u/giftXRB", "u/giftXRB"]
+        command = ["/u/giftXRB", "u/giftXRB", "/u/giftNANO", "u/giftNANO"]
         try:
             self.log.info("Mention Found")
             comment_parts = item.name.split("_")
@@ -61,15 +61,17 @@ class InboxScanner:
                         subreddit_name = item.subreddit.display_name
                         self.log.info("Author: " + author + "\nSubreddit: " + subreddit_name)
                         if author != "reddit" and author != "xrb4u" and author != "raiblocks_tipbot" and author != "giftxrb" \
-                                and author != "automoderator" and subreddit_name.lower() != "cryptocurrency":
+                                and author != "giftnano" and author != "nano_tipbot" and author != "nano4u" and author != "automoderator" and subreddit_name.lower() != "cryptocurrency":
 
                             redditor = self.reddit_client.redditor(item.author.name)
+
+                            parent = item.parent()
 
                             created = redditor.created_utc
 
                             age = (datetime.utcnow() - datetime.fromtimestamp(int(created))).days
 
-                            comment_karma = redditor.comment_karma
+                            comment_karma = parent.comment_karma
 
                             if age >= 10 and comment_karma >= 20:
 
@@ -85,15 +87,15 @@ class InboxScanner:
                                     if item.subject == 'username mention':
                                         self.process_mention(item)
                                 else:
-                                    reply_message = 'Please do not send PMs to this bot. The main TipBot, /u/RaiBlocks_TipBot,' + \
+                                    reply_message = 'Please do not send PMs to this bot. The main TipBot, /u/NANO_TipBot,' + \
                                                     ' should be used for interaction via PM \n\nGo to the [wiki]' + \
-                                                    '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info'
+                                                    '(https://np.reddit.com/r/NANO_tipbot/wiki/giveaway) for more info'
                                     item.reply(reply_message)
                             else:
                                 reply_message = 'Sorry! I cannot gift an account less than 10 days old or with less than' \
-                                                ' 20 comment karma\n\n This is to prevent bots from exploiting the RaiBlocks ' \
+                                                ' 20 comment karma\n\n This is to prevent bots from exploiting the NANO ' \
                                                 'giveaway \n\nGo to the [wiki]' + \
-                                                '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info'
+                                                '(https://np.reddit.com/r/NANO_tipbot/wiki/giveaway) for more info'
                                 item.reply(reply_message)
             except:
                 reply_message = 'An error came up, your request could not be processed\n\n' + \

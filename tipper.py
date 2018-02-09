@@ -68,19 +68,20 @@ class Tipper:
                             'destination': receiving_address, 'amount': int(raw_send)}
                     post_body = self.rest_wallet.post_to_wallet(data, self.log)
                     reply_text = reply_text + \
-                                 'Congratulations! /u/%s has been gifted %s XRB or $%s \n\nUSD conversion rate of $%s per XRB from [Coin Market Cap](https://coinmarketcap.com/currencies/raiblocks/)\n\n[Block Link](https://www.raiblocks.club/block/%s)' \
+                                 'Congratulations! /u/%s has been gifted %s XRB or $%s \n\nUSD conversion rate of $%s per XRB from [Coin Market Cap](https://coinmarketcap.com/currencies/raiblocks/)\n\n[Block Link](https://www.nanode.co/block/%s)' \
                                  % (receiving_user, formatted_amount, formatted_usd, formatted_rate,
                                     str(post_body['block']))
-                    reply_text = reply_text + "  \n\nAn account with the RaiBlocks_TipBot has been registered"
+                    reply_text = reply_text + "  \n\nAn account with the NANO_TipBot has been registered for %s" % (receiving_user)
+                    reply_text = reply_text + "  \n\n Accelerate NANO adoption: You can pass on this one-time gift to any newcomers to NANO! Just reply to anyone and include /u/giftxrb"
                     reply_text = reply_text + "  \n\nThe GiveAway balance is %s, so I can gift %s more redditors!" % (
                         str(giveaway_xrb), str(int(redditors_left)))
                     reply_text = reply_text + "  \n\nGo to the [GiveAway Wiki]" + \
-                                 "(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info"
+                                 "(https://np.reddit.com/r/NANO_tipbot/wiki/giveaway) for more info"
                 else:
                     reply_text = reply_text + 'The GiveAway bot is all out of gifts! Consider tipping this bot ' \
                                               'to replenish its gifts'
                     reply_text = reply_text + "  \n\nGo to the [GiveAway Wiki]" + \
-                                 "(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info"
+                                 "(https://np.reddit.com/r/NANO_tipbot/wiki/giveaway) for more info"
 
                 self.comment_reply(comment, reply_text)
         except TypeError as e:
@@ -120,9 +121,9 @@ class Tipper:
             if user_data is not None:
                 # reply that registered users cannot be gifted
                 reply_message = "The user /u/" + receiving_user + " cannot be gifted because they are already" + \
-                                " registered with the TipBot\n\n Pass the gift to all newcomers to RaiBlocks!" + \
-                                "\n\n For more info on the giveaway, check out the" + \
-                                " [GiveAway Wiki](https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway)"
+                                " registered with the TipBot\n\n Pass the gift to all newcomers to NANO!" + \
+                                "\n\n Accelerate NANO adoption: You can pass on this one-time gift to any newcomers to NANO! Just reply to anyone and include /u/giftxrb" + \
+                                "Visit the [GiveAway Wiki](https://np.reddit.com/r/NANO_tipbot/wiki/giveaway) for more info"
 
                 self.comment_reply(comment, reply_message)
             else:
@@ -166,14 +167,14 @@ class Tipper:
                         reply_text = 'The GiveAway bot is all out of gifts! Consider tipping this bot ' \
                                      'to replenish its gifts'
                         reply_text = reply_text + "  \n\nGo to the [GiveAway Wiki]" + \
-                                     "(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info"
+                                     "(https://np.reddit.com/r/NANO_tipbot/wiki/giveaway) for more info"
                         self.comment_reply(comment, reply_text)
 
         else:
             self.log.info('Sender NOT in db')
             reply_text = 'Hi /u/' + str(comment.author.name) + ', please register with the bot by sending it a' \
                          + ' private message.  \n\nGo to the [wiki]' + \
-                         "(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/index) for more info"
+                         "(https://np.reddit.com/r/NANO_tipbot/wiki/index) for more info"
 
             self.comment_reply(comment, reply_text)
 
@@ -222,18 +223,18 @@ class Tipper:
     def invalid_formatting(self, comment, mention):
         comment_table = self.db['comments']
         self.log.info('Invalid formatting')
-        if comment.author.name != 'RaiBlocks_tipbot':
+        if comment.author.name.lower() != 'raiblocks_tipbot' and comment.author.name.lower() != "nano_tipbot":
             if mention:
                 self.comment_reply(comment, 'Was I mentioned? I could not parse your request  \n\nGo to the [wiki]' +
-                                   '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/index) to learn how to tip with' +
-                                   ' RaiBlocks')
+                                   '(https://np.reddit.com/r/NANO_tipbot/wiki/index) to learn how to tip with' +
+                                   ' NANO')
             else:
                 self.comment_reply(comment,
                                    'Tip command is invalid. Tip with any of the following formats:  \n\n' +
-                                   '`!tipxrb <username> <amount>`  \n\n`\u\RaiBlocks_TipBot <username> <amount>`  \n\n'
+                                   '`!tipxrb <username> <amount>`  \n\n`\u\NANO_TipBot <username> <amount>`  \n\n'
                                    + '`\u\XRB4U <username> <amount>`  \n\n  Amount must be greater than 0'
                                    + ' and less than 5  \n\nGo to the [wiki]' +
-                                   '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/index) for more commands')
+                                   '(https://np.reddit.com/r/NANO_tipbot/wiki/index) for more commands')
         record = dict(
             comment_id=comment.fullname, to=None, amount=None, author=comment.author.name)
         self.log.info("Inserting into db: " + str(record))
@@ -278,7 +279,7 @@ class Tipper:
             self.process_command(comment, receiving_user, amount)
         else:
             self.comment_reply(comment, 'Was I mentioned? I could not parse your request  \n\nGo to the [wiki]' +
-                               '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) to learn about '
+                               '(https://np.reddit.com/r/NANO_tipbot/wiki/giveaway) to learn about '
                                'the GiveAway program')
 
     def parse_tip(self, comment):
