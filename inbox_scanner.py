@@ -71,7 +71,9 @@ class InboxScanner:
 
                             age = (datetime.utcnow() - datetime.fromtimestamp(int(created))).days
 
-                            comment_karma = parent.comment_karma
+                            parent_redditor = self.reddit_client.redditor(parent.author.name)
+
+                            comment_karma = parent_redditor.comment_karma
 
                             if age >= 10 and comment_karma >= 20:
 
