@@ -275,7 +275,7 @@ class Tipper:
         self.log.info("Parent: ")
         self.log.info(vars(parent))
 
-        if receiving_user is not None and receiving_user.lower() != "giftxrb":
+        if receiving_user is not None and receiving_user.lower() != "giftxrb" and receiving_user.lower() != "giftnano":
             self.process_command(comment, receiving_user, amount)
         else:
             self.comment_reply(comment, 'Was I mentioned? I could not parse your request  \n\nGo to the [wiki]' +
