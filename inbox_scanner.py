@@ -130,13 +130,12 @@ class InboxScanner:
             self.log.info('Already in db, ignore')
         else:
             author_obj = item.author
-            subreddit_name = item.subreddit.display_name
             if author_obj is not None:
                 author_name = author_obj.name
                 if author_name is not None:
                     author = author_name.lower()
                     if author != "reddit" and author != "xrb4u" and author != "raiblocks_tipbot" and author != "giftxrb" \
-                            and author != "giftnano" and author != "nano_tipbot" and author != "nano4u" and author != "automoderator" and subreddit_name.lower() != "cryptocurrency":
+                            and author != "giftnano" and author != "nano_tipbot" and author != "nano4u" and author != "automoderator":
                         user_table = self.db['user']
 
                         self.log.info("Item is as follows:")

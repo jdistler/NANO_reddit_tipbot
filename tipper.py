@@ -255,8 +255,13 @@ class Tipper:
             self.log.info('Already in db, ignore')
         else:
             author = comment.author.name.lower()
+            try:
+                subreddit_name = comment.subreddit.display_name;
+            except:
+                subreddit_name = ''
+                
             if author != "reddit" and author != "xrb4u" and author != "raiblocks_tipbot" and author != "giftxrb" \
-                    and author != "automoderator" and author != "giftnano" and author != "nano_tipbot" and author != "nano4u":
+                    and author != "automoderator" and author != "giftnano" and author != "nano_tipbot" and author != "nano4u" and subreddit_name.lower() != "cryptocurrency":
                 length = len(parts_of_comment)
                 passing = False
 
