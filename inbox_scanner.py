@@ -53,44 +53,48 @@ class InboxScanner:
             self.log.info('Already in db, ignore')
         else:
             try:
-                author = item.author.name.lower()
-                subreddit_name = item.subreddit.display_name
-                self.log.info("Author: " + author + "\nSubreddit: " + subreddit_name)
-                if author != "reddit" and author != "xrb4u" and author != "raiblocks_tipbot" and author != "giftxrb" \
-                        and author != "automoderator" and subreddit_name.lower() != "cryptocurrency":
+                author_obj = item.author
+                if author_obj is not None:
+                    author_name = author_obj.name
+                    if author_name is not None:
+                        author = author_name.lower()
+                        subreddit_name = item.subreddit.display_name
+                        self.log.info("Author: " + author + "\nSubreddit: " + subreddit_name)
+                        if author != "reddit" and author != "xrb4u" and author != "raiblocks_tipbot" and author != "giftxrb" \
+                                and author != "automoderator" and subreddit_name.lower() != "cryptocurrency":
 
-                    redditor = self.reddit_client.redditor(item.author.name)
+                            redditor = self.reddit_client.redditor(item.author.name)
 
-                    created = redditor.created_utc
+                            created = redditor.created_utc
 
-                    age = (datetime.utcnow() - datetime.fromtimestamp(int(created))).days
+                            age = (datetime.utcnow() - datetime.fromtimestamp(int(created))).days
 
-                    comment_karma = redditor.comment_karma
+                            comment_karma = redditor.comment_karma
 
-                    if age >= 10 and comment_karma >= 20:
+                            if age >= 10 and comment_karma >= 20:
 
-                        self.log.info("Item is as follows:")
-                        self.log.info((vars(item)))
+                                self.log.info("Item is as follows:")
+                                self.log.info((vars(item)))
 
-                        self.log.info("Attribute - Item was comment: " + str(item.was_comment))
+                                self.log.info("Attribute - Item was comment: " + str(item.was_comment))
 
-                        # Only care about mentions for the giveaway bot
+                                # Only care about mentions for the giveaway bot
 
-                        if item.was_comment:
-                            self.log.info("Comment subject: " + str(item.subject))
-                            if item.subject == 'username mention':
-                                self.process_mention(item)
-                        else:
-                            reply_message = 'Please do not send PMs to this bot. The main TipBot, /u/RaiBlocks_TipBot,' + \
-                                            ' should be used for interaction via PM \n\nGo to the [wiki]' + \
-                                            '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info'
-                            item.reply(reply_message)
-                    else:
-                        reply_message = 'Sorry! I cannot gift an account less than 10 days old or with less than' \
-                                        ' 20 comment karma\n\n This is to prevent bots from exploiting the RaiBlocks ' \
-                                        'giveaway \n\nGo to the [wiki]' + \
-                                        '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info'
-                        item.reply(reply_message)
+                                if item.was_comment:
+                                    self.log.info("Comment subject: " + str(item.subject))
+                                    if item.subject == 'username mention':
+                                        self.process_mention(item)
+                                else:
+                                    reply_message = 'Please do not send PMs to this bot. The main TipBot, /u/RaiBlocks_TipBot,' + \
+                                                    ' should be used for interaction via PM \n\nGo to the [wiki]' + \
+                                                    '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info'
+                                    item.reply(reply_message)
+                            else:
+                                reply_message = 'Sorry! I cannot gift an account less than 10 days old or with less than' \
+                                                ' 20 comment karma\n\n This is to prevent bots from exploiting the RaiBlocks ' \
+                                                'giveaway \n\nGo to the [wiki]' + \
+                                                '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/giveaway) for more info'
+                                item.reply(reply_message)
             except:
                 reply_message = 'An error came up, your request could not be processed\n\n' + \
                                 ' Paging /u/valentulus_menskr error id: ' + item.name + '\n\n'
