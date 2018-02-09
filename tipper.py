@@ -72,7 +72,7 @@ class Tipper:
                                  % (receiving_user, formatted_amount, formatted_usd, formatted_rate,
                                     str(post_body['block']))
                     reply_text = reply_text + "  \n\nAn account with the NANO_TipBot has been registered for %s" % (receiving_user)
-                    reply_text = reply_text + "  \n\n Accelerate NANO adoption: You can pass on this one-time gift to any newcomers to NANO! Just reply to anyone and include /u/giftxrb"
+                    reply_text = reply_text + "  \n\n Accelerate NANO adoption: You can pass on this one-time gift to any newcomers to NANO! Just reply to anyone and include /u/giftNANO"
                     reply_text = reply_text + "  \n\nThe GiveAway balance is %s, so I can gift %s more redditors!" % (
                         str(giveaway_xrb), str(int(redditors_left)))
                     reply_text = reply_text + "  \n\nGo to the [GiveAway Wiki]" + \
@@ -122,7 +122,7 @@ class Tipper:
                 # reply that registered users cannot be gifted
                 reply_message = "The user /u/" + receiving_user + " cannot be gifted because they are already" + \
                                 " registered with the TipBot\n\n Pass the gift to all newcomers to NANO!" + \
-                                "\n\n Accelerate NANO adoption: You can pass on this one-time gift to any newcomers to NANO! Just reply to anyone and include /u/giftxrb  " + \
+                                "\n\n Accelerate NANO adoption: You can pass on this one-time gift to any newcomers to NANO! Just reply to anyone and include /u/giftNANO  " + \
                                 "  \n\nVisit the [GiveAway Wiki](https://np.reddit.com/r/NANO_tipbot/wiki/giveaway) for more info"
 
                 self.comment_reply(comment, reply_message)
