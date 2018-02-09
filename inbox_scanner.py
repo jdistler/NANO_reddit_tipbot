@@ -35,7 +35,7 @@ class InboxScanner:
                 data = {'action': 'send', 'wallet': self.wallet_id, 'source': user_address, 'destination': send_address,
                         'amount': int(raw_send)}
                 parsed_json = self.rest_wallet.post_to_wallet(data, self.log)
-                reply_message = 'Sent %s to %s\n\n[Block Link](https://www.raiblocks.club/block/%s)' % (
+                reply_message = 'Sent %s to %s\n\n[Block Link](https://www.nanode.co/block/%s)' % (
                     amount, send_address, str(parsed_json['block']))
                 item.reply(reply_message)
             else:
@@ -73,10 +73,10 @@ class InboxScanner:
         rate = util.get_price()
         if rate is not None:
             usd = float(xrb_balance) * rate
-            reply_message = 'Your balance is :\n\n %s XRB or $%s USD \n\nUSD conversion rate of $%s' % \
+            reply_message = 'Your balance is :\n\n %s NANO or $%s USD \n\nUSD conversion rate of $%s' % \
                             (xrb_balance, str(format(float(usd), '.3f')), str(format(float(rate), '.3f')))
         else:
-            reply_message = 'Your balance is :\n\n %s XRB' % xrb_balance
+            reply_message = 'Your balance is :\n\n %s NANO' % xrb_balance
         item.reply(reply_message)
 
     def register_account(self, item, user_table):
@@ -89,7 +89,7 @@ class InboxScanner:
         self.log.info("Inserting into db: " + str(record))
         user_table.insert(record)
         # Reply
-        explorer_link = 'https://www.raiblocks.club/account/' + parsed_json['account']
+        explorer_link = 'https://www.nanode.co/account/' + parsed_json['account']
         reply_message = 'Thanks for registering, your deposit address is ' + parsed_json['account'] + \
                         ' and you can see your balance here ' + explorer_link + '\r\nFor more details reply with "help"'
 
@@ -97,7 +97,7 @@ class InboxScanner:
 
     def process_mention(self, item):
         comment = None
-        command = ["/u/RaiBlocks_TipBot", "u/RaiBlocks_TipBot", "/u/XRB4U", "u/XRB4U"]
+        command = ["/u/RaiBlocks_TipBot", "u/RaiBlocks_TipBot", "/u/XRB4U", "u/XRB4U", "/u/NANO_TipBot", "u/NANO_TipBot", "/u/NANO4U", "u/NANO4U"]
         try:
             self.log.info("Mention Found")
             comment_parts = item.name.split("_")
@@ -136,7 +136,7 @@ class InboxScanner:
                 if author_name is not None:
                     author = author_name.lower()
                     if author != "reddit" and author != "xrb4u" and author != "raiblocks_tipbot" and author != "giftxrb" \
-                            and author != "automoderator" and subreddit_name.lower() != "cryptocurrency":
+                            and author != "giftnano" and author != "nano_tipbot" and author != "nano4u" and author != "automoderator" and subreddit_name.lower() != "cryptocurrency":
                         user_table = self.db['user']
 
                         self.log.info("Item is as follows:")
@@ -155,9 +155,9 @@ class InboxScanner:
                                 self.log.info(item.body)
                                 if 'help' in item.body.lower():
                                     reply_message = 'Help\n\n Reply with the command in the body of text:\n\n  balance - get' \
-                                                    + ' your balance\n\n  send <amount> <address> - send XRB to an external ' \
+                                                    + ' your balance\n\n  send <amount> <address> - send NANO to an external ' \
                                                       'address\n\naddress - get your deposit address\n\nMore info: ' \
-                                                    + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
+                                                    + 'https://np.reddit.com/r/NANO_tipbot/wiki/start'
                                     item.reply(reply_message)
 
                                 elif 'address' in item.body.lower():
@@ -170,20 +170,20 @@ class InboxScanner:
                                     self.get_balance(item)
 
                                 elif 'send' in item.body.lower():
-                                    self.log.info('Sending raiblocks')
+                                    self.log.info('Sending NANO')
                                     if len(commands) > 2:
                                         self.prepare_send(commands, item)
                                     else:
                                         reply_message = 'Sorry I could not parse your request.\n\nWhen making requests only put' + \
                                                         ' one command in the message body with no other text\n\nTry the "help"' + \
                                                         ' command\n\nMore info: ' \
-                                                        + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
+                                                        + 'https://np.reddit.com/r/NANO_tipbot/wiki/start'
                                         item.reply(reply_message)
 
                                 elif 'register' in item.body.lower():
                                     self.log.info("Already Registered")
                                     reply_message = 'Your account is already registered\n\nTry the "help" command\n\nMore info: ' \
-                                                    + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
+                                                    + 'https://np.reddit.com/r/NANO_tipbot/wiki/start'
                                     item.reply(reply_message)
 
                                 else:
@@ -191,7 +191,7 @@ class InboxScanner:
                                     reply_message = 'Sorry I could not parse your request.\n\nWhen making requests only put' + \
                                                     ' one command in the message body with no other text\n\nTry the "help"' + \
                                                     ' command\n\nMore info: ' \
-                                                    + 'https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start'
+                                                    + 'https://np.reddit.com/r/NANO_tipbot/wiki/start'
                                     item.reply(reply_message)
                             else:
                                 self.log.info(str(item.author.name) + ' Not in DB')

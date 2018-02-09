@@ -20,7 +20,7 @@ class CommentsScanner:
 
         try:
             for comment in subreddit_client.stream.comments():
-                command = ['!tipxrb']
+                command = ['!tipxrb', '!tipnano']
                 self.tipper.parse_comment(comment, command, False)
 
         except (praw.exceptions.PRAWException, prawcore.exceptions.PrawcoreException) as e:

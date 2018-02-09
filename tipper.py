@@ -73,11 +73,11 @@ class Tipper:
                             'destination': receiving_address, 'amount': int(raw_send)}
                     post_body = self.rest_wallet.post_to_wallet(data, self.log)
                     reply_text = reply_text + \
-                                 'Tipped %s XRB or $%s to /u/%s\n\nUSD conversion rate of $%s per XRB from [Coin Market Cap](https://coinmarketcap.com/currencies/raiblocks/)\n\n[Block Link](https://www.raiblocks.club/block/%s)' \
+                                 'Tipped %s XRB or $%s to /u/%s\n\nUSD conversion rate of $%s per XRB from [Coin Market Cap](https://coinmarketcap.com/currencies/raiblocks/)\n\n[Block Link](https://www.nanode.co/block/%s)' \
                                  % (formatted_amount, formatted_usd, receiving_user, formatted_rate,
                                     str(post_body['block']))
                     reply_text = reply_text + "  \n\nGo to the [wiki]" + \
-                                 "(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start) for more info"
+                                 "(https://np.reddit.com/r/NANO_tipbot/wiki/start) for more info"
                 else:
                     reply_text = reply_text + 'Not enough in your account to tip'
 
@@ -140,7 +140,7 @@ class Tipper:
             self.log.info('Sender NOT in db')
             reply_text = 'Hi /u/' + str(comment.author.name) + ', please register with the bot by sending it a' \
                          + ' private message with the text "register" in the body of the message.  \n\nGo to the [wiki]' + \
-                         "(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start) for more info"
+                         "(https://np.reddit.com/r/NANO_tipbot/wiki/start) for more info"
 
             self.comment_reply(comment, reply_text)
 
@@ -187,17 +187,17 @@ class Tipper:
     def invalid_formatting(self, comment, mention):
         comment_table = self.db['comments']
         self.log.info('Invalid formatting')
-        if comment.author.name != 'RaiBlocks_tipbot':
+        if comment.author.name.lower() != 'raiblocks_tipbot' and comment.author.name.lower() != 'nano_tipbot' and comment.author.name.lower() != 'nano4u':
             if mention:
                 self.comment_reply(comment, 'Was I mentioned? I could not parse your request  \n\nGo to the [wiki]' +
-                                   '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start) to learn how to tip with' +
-                                   ' RaiBlocks')
+                                   '(https://np.reddit.com/r/NANO_tipbot/wiki/start) to learn how to tip with' +
+                                   ' NANO')
             else:
                 self.comment_reply(comment,
                                    'Tip command is invalid. Tip with any of the following formats:  \n\n' +
-                                   '`!tipxrb <username> <amount>`  \n\n`/u/RaiBlocks_TipBot <username> <amount>`  \n\n'
+                                   '`!tipxrb <username> <amount>`  \n\n`/u/NANO_TipBot <username> <amount>`  \n\n'
                                    + '`/u/XRB4U <username> <amount>`  \n\nGo to the [wiki]' +
-                                   '(https://np.reddit.com/r/RaiBlocks_tipbot/wiki/start) for more commands')
+                                   '(https://np.reddit.com/r/NANO_tipbot/wiki/start) for more commands')
         record = dict(
             comment_id=comment.fullname, to=None, amount=None, author=comment.author.name)
         self.log.info("Inserting into db: " + str(record))
@@ -256,7 +256,7 @@ class Tipper:
         else:
             author = comment.author.name.lower()
             if author != "reddit" and author != "xrb4u" and author != "raiblocks_tipbot" and author != "giftxrb" \
-                    and author != "automoderator":
+                    and author != "automoderator" and author != "giftnano" and author != "nano_tipbot" and author != "nano4u":
                 length = len(parts_of_comment)
                 passing = False
 
