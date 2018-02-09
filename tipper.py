@@ -122,8 +122,8 @@ class Tipper:
                 # reply that registered users cannot be gifted
                 reply_message = "The user /u/" + receiving_user + " cannot be gifted because they are already" + \
                                 " registered with the TipBot\n\n Pass the gift to all newcomers to NANO!" + \
-                                "\n\n Accelerate NANO adoption: You can pass on this one-time gift to any newcomers to NANO! Just reply to anyone and include /u/giftxrb" + \
-                                "Visit the [GiveAway Wiki](https://np.reddit.com/r/NANO_tipbot/wiki/giveaway) for more info"
+                                "\n\n Accelerate NANO adoption: You can pass on this one-time gift to any newcomers to NANO! Just reply to anyone and include /u/giftxrb  " + \
+                                "  \n\nVisit the [GiveAway Wiki](https://np.reddit.com/r/NANO_tipbot/wiki/giveaway) for more info"
 
                 self.comment_reply(comment, reply_message)
             else:
