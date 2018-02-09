@@ -207,6 +207,8 @@ class Tipper:
     def process_command(self, comment, receiving_user, amount):
         # parse reddit username
         receiving_user = self.parse_user(receiving_user)
+        if receiving_user == 'nano_tipbot':
+            receiving_user = 'raiblocks_tipbot'
         self.log.info("Receiving user: " + receiving_user)
         self.process_tip(amount, comment, receiving_user)
 
@@ -259,7 +261,7 @@ class Tipper:
                 subreddit_name = comment.subreddit.display_name;
             except:
                 subreddit_name = ''
-                
+
             if author != "reddit" and author != "xrb4u" and author != "raiblocks_tipbot" and author != "giftxrb" \
                     and author != "automoderator" and author != "giftnano" and author != "nano_tipbot" and author != "nano4u" and subreddit_name.lower() != "cryptocurrency":
                 length = len(parts_of_comment)
