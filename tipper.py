@@ -43,7 +43,7 @@ class Tipper:
                 usd = float(amount) * rate
                 formatted_usd = str(format(float(usd), '.3f'))
 
-            self.log.info("Sending amount: " + str(amount) + "XRB, $" + str(usd))
+            self.log.info("Sending amount: " + str(amount) + "NANO, $" + str(usd))
 
             # float of total send
             float_amount = float(amount)
@@ -68,7 +68,7 @@ class Tipper:
                             'destination': receiving_address, 'amount': int(raw_send)}
                     post_body = self.rest_wallet.post_to_wallet(data, self.log)
                     reply_text = reply_text + \
-                                 'Congratulations! /u/%s has been gifted %s XRB or $%s \n\nUSD conversion rate of $%s per XRB from [Coin Market Cap](https://coinmarketcap.com/currencies/raiblocks/)\n\n[Block Link](https://www.nanode.co/block/%s)' \
+                                 'Congratulations! /u/%s has been gifted %s NANO or $%s \n\nUSD conversion rate of $%s per NANO from [Coin Market Cap](https://coinmarketcap.com/currencies/raiblocks/)\n\n[Block Link](https://www.nanode.co/block/%s)' \
                                  % (receiving_user, formatted_amount, formatted_usd, formatted_rate,
                                     str(post_body['block']))
                     reply_text = reply_text + "  \n\nAn account with the NANO_TipBot has been registered for %s" % (receiving_user)
@@ -231,8 +231,8 @@ class Tipper:
             else:
                 self.comment_reply(comment,
                                    'Tip command is invalid. Tip with any of the following formats:  \n\n' +
-                                   '`!tipxrb <username> <amount>`  \n\n`\u\NANO_TipBot <username> <amount>`  \n\n'
-                                   + '`\u\XRB4U <username> <amount>`  \n\n  Amount must be greater than 0'
+                                   '`!tipNANO <username> <amount>`  \n\n`\u\NANO_TipBot <username> <amount>`  \n\n'
+                                   + '`\u\NANO4U <username> <amount>`  \n\n  Amount must be greater than 0'
                                    + ' and less than 5  \n\nGo to the [wiki]' +
                                    '(https://np.reddit.com/r/NANO_tipbot/wiki/index) for more commands')
         record = dict(
