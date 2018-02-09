@@ -98,6 +98,8 @@ class Tipper:
             self.log.error(tb)
 
     def process_tip(self, amount, comment, receiving_user):
+        if receiving_user.lower() == 'giftnano':
+            receiving_user = 'giftxrb'
         user_table = self.db['user']
         comment_table = self.db['comments']
 
@@ -207,8 +209,6 @@ class Tipper:
     def process_command(self, comment, receiving_user, amount):
         # parse reddit username
         receiving_user = self.parse_user(receiving_user)
-        if receiving_user == 'nano_tipbot':
-            receiving_user = 'raiblocks_tipbot'
         self.log.info("Receiving user: " + receiving_user)
         self.process_tip(amount, comment, receiving_user)
 
