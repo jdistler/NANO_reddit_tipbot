@@ -66,7 +66,7 @@ def find_user(user_id, logger, db):
 
 def get_price():
     try:
-        r = requests.get('https://api.coinmarketcap.com/v1/ticker/raiblocks/')
+        r = requests.get('https://api.coinmarketcap.com/v1/ticker/nano/')
         payload = r.json()[0]["price_usd"]
         result = float(payload)
     except:
