@@ -12,4 +12,5 @@ Use the `launchScanners.sh` script to kill existing python processes, and start 
 `inbox_scanner.py` reads all incoming reddit mail to the bot to answer queries, and `comments_scanner.py` scans the entire NANO subreddit for mentions using `!tipxrb` or `!tipnano`.
 
 ## Using
-For more information check out https://www.reddit.com/r/NANO_tipbot/wiki/index
+For more information check out the current active fork of this project - 
+https://github.com/danhitchcock/nano_tipper_z
